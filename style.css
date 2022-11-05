@@ -1,0 +1,180 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
+
+* {
+    color: white;
+    font-family: Roboto, serif;
+    font-weight: bold;
+    user-select: none;
+}
+
+body {
+    background-color: #011825;
+    overflow: hidden;
+}
+
+.start-container {
+    transition: opacity 1s;
+}
+
+.start-container > img {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
+    border-radius: 50%;
+    width: 128px;
+    animation: infinite;
+    animation-delay: 0s;
+    animation-duration: 3s;
+    animation-name: turn;
+}
+
+@keyframes turn {
+    0% {
+        rotate: 0;
+    }
+
+    50% {
+        rotate: 360deg;
+    }
+}
+
+.container {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s;
+    display: flex;
+}
+
+.main-section {
+    top: 0;
+}
+
+.skills-section {
+    top: 100%;
+}
+
+.projects-section {
+    top: 200%;
+}
+
+.contact-section {
+    top: 300%;
+}
+
+section {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.main-section > h1 {
+    margin-top: 22%;
+}
+
+.cursor {
+    position: absolute;
+    width: 4px;
+    height: 50px;
+    border-radius: 1px;
+    background-color: #36393F;
+}
+
+h1 {
+    text-align: center;
+    font-size: 45px;
+}
+
+a {
+    color: #92f69f;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    translate: -50%;
+    text-align: center;
+    font-size: 20px;
+    text-shadow: 0 2px 10px white;
+}
+
+.cool-text {
+    text-shadow: 1px 3px 10px #199ae1;
+}
+
+.particle-effect {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+canvas {
+    pointer-events: none;
+}
+
+.options {
+    margin-top: calc(10% - 40px);
+    position: absolute;
+    left: 50%;
+    translate: -50%;
+    display: flex;
+}
+
+.options > div {
+    margin-left: 10px;
+    margin-right: 10px;
+    transition: scale .2s, text-shadow .2s;
+    cursor: pointer;
+}
+
+.options > div:hover {
+    scale: 1.1;
+    text-shadow: 1px 3px 15px #199ae1;
+}
+
+.skills-list-a {
+    margin-top: 10%;
+    position: absolute;
+    left: 50%;
+    translate: -50%;
+    width: 60%;
+    display: flex;
+    flex-wrap: wrap;
+    text-align: center;
+    justify-content: center;
+}
+
+.skills-list > div {
+    transition: scale .2s, opacity .5s, text-shadow .2s;
+    cursor: pointer;
+    color: var(--text-color);
+    padding: 10px;
+}
+
+.skills-list > div:hover {
+    scale: 1.1;
+    text-shadow: 1px 3px 15px var(--text-color);
+    text-decoration: underline;
+}
+
+.sl-1 {
+    --text-color: #e76087;
+    font-size: 40px;
+}
+
+.sl-2 {
+    --text-color: #e03667;
+    font-size: 30px;
+}
+
+.sl-3 {
+    --text-color: #f1a6bb;
+    font-size: 30px;
+}
+
+.sl-4 {
+    --text-color: #ee0f4f;
+    font-size: 25px;
+}

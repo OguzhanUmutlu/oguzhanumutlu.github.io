@@ -8,9 +8,322 @@
     <meta content="https://oguzhanumutlu.github.io/" property="og:url"/>
     <meta content="https://oguzhanumutlu.github.io/icon.png" property="og:image"/>
     <meta content="#619EFF" data-react-helmet="true" name="theme-color"/>
-    <title>Test</title>
+    <title>Oğuzhan's Portfolio</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-test
+<canvas class="particle-effect"></canvas>
+<div class="start-container">
+    <img src="icon.png">
+</div>
+<div class="container" style="display: none; translate: 0 -100%">
+    <section class="main-section">
+        <h1>
+            Hello, I'm <span class="cool-text">Oğuzhan</span>,<br>
+            &nbsp;<span class="animated-info"></span><span class="cursor">&nbsp;</span>
+        </h1>
+    </section>
+    <section class="skills-section">
+        <div class="options">
+            <div>All</div>
+        </div>
+        <div class="skills-list skills-list-a"></div>
+        <canvas class="bounce-effect"></canvas>
+    </section>
+    <section class="projects-section">
+
+    </section>
+    <section class="contact-section">
+
+        <div class="footer">
+            ©
+            <script>document.write(new Date().getFullYear().toString())</script>
+            OguzhanUmutlu<br>
+            <span style="font-size: 30px">Made with <a target="_blank"
+                                                       href="https://github.com">Github</a> <span
+                    style="color: red; text-shadow: none">&hearts;</span></span>
+        </div>
+    </section>
+</div>
 </body>
+<script type="module">
+    const {round, floor, abs, random, PI, sin, cos, acos, sqrt} = Math;
+    const rand = (a, b) => floor(random() * (b - a + 1)) + a;
+    const query = new URLSearchParams(location.href);
+    const DEV_MODE = query.has("DEV_MODE");
+    const $ = r => document.querySelector(r);
+    addEventListener("contextmenu", ev => {
+        // TODO: custom context menu
+        ev.preventDefault();
+    });
+    // addEventListener("keydown", ev => ev.preventDefault());
+
+    await new Promise(r => addEventListener("load", r));
+    const containerDiv = $(".container");
+    containerDiv.style.display = "";
+    const wait = t => new Promise(r => setTimeout(r, t));
+    if (!DEV_MODE) await wait(2000);
+    const startContainerDiv = $(".start-container");
+    startContainerDiv.style.opacity = "0";
+    containerDiv.style.pointerEvents = "all";
+    containerDiv.style.translate = "";
+    containerDiv.style.opacity = "1";
+    setTimeout(() => {
+        startContainerDiv.style.display = "none";
+    }, 1000);
+    setInterval(() => {
+        const cursorDiv = $(".cursor");
+        cursorDiv.hidden = !cursorDiv.hidden;
+    }, 500);
+    const animatedInfo = async () => {
+        if (sec !== 0) return setTimeout(animatedInfo);
+        const animatedInfoDiv = $(".animated-info");
+        const texts = [
+            "a full stack web developer.",
+            "an app developer.",
+            "a 2D/3D web game developer.",
+            "a math fan.",
+            "a physics addict.",
+            "a student.",
+            "and much more..."
+        ];
+        for (let i = 0; i < texts.length; i++) {
+            const text = texts[i];
+            for (let j = 0; j < text.length; j++) {
+                const c = text[j];
+                animatedInfoDiv.innerHTML += c;
+                await wait(70);
+            }
+            await wait(2000);
+            while (animatedInfoDiv.innerHTML) {
+                animatedInfoDiv.innerHTML = animatedInfoDiv.innerHTML.split("").reverse().slice(1).reverse().join("");
+                await wait(20);
+            }
+            await wait(1000);
+        }
+        setTimeout(animatedInfo);
+    };
+    const particleCanvas = $(".particle-effect");
+    let particles = [];
+    const bounceCanvas = $(".bounce-effect");
+    const pCtx = particleCanvas.getContext("2d");
+    const bCtx = bounceCanvas.getContext("2d");
+    const bounceCircles = [-20, -10, 0, 10, 20].map(i => ({x: i, r: 25}));
+    let ref = [innerWidth * .5, innerHeight * .5];
+    const len = [600, 10];
+    let radius = innerHeight * .4;
+    bounceCircles.forEach(i => {
+        // update
+        i._collisions = () => bounceCircles.filter(j => i !== j).map(j => ({
+            dist: sqrt((i._x() - j._x()) ** 2 + (i._y() - j._y()) ** 2) - i.r - j.r,
+            tile: j
+        })).filter(i => i.dist < 0);
+        i._x = () => ref[0] + i.x;
+        i._y = () => ref[1] + sin(acos(i.x / radius)) * radius;
+    });
+    let bounceCache = {first: true};
+    const animate = () => {
+        ref = [innerWidth * .5, innerHeight * .4];
+        radius = innerHeight * .4;
+        particleCanvas.width = innerWidth;
+        particleCanvas.height = innerHeight * (maxSec + 1);
+        bounceCanvas.width = innerWidth;
+        bounceCanvas.height = innerHeight;
+        const diff = scrollTarget - scrollY;
+        if (round(diff) === 0) scrollCooldown = true;
+        else {
+            if (abs(diff / 10) < 1) scrollTo(0, scrollY + (diff > 0 ? 1 : -1));
+            else scrollTo(0, scrollY + diff / 10);
+        }
+        //particleCanvas.style.top = scrollY + "px";
+        particles = particles.filter(i => !i.bornDone || i.opacity >= 0.01);
+        if (particles.length < 100) {
+            particles.push({
+                x: rand(0, particleCanvas.width),
+                y: rand(0, particleCanvas.height),
+                velocity: [rand(-2, 2) || 1, rand(-2, 2) || 1],
+                bornOpacity: rand(5, 10) / 10,
+                bornDone: false,
+                opacity: 0.01,
+                radius: rand(4, 10)
+            });
+        }
+        particles.forEach(i => {
+            if (i.opacity < 0.01) return;
+            i.x += i.velocity[0];
+            i.y += i.velocity[1];
+            if (i.bornDone) {
+                i.opacity -= 0.01;
+            } else {
+                i.opacity += 0.01;
+                if (i.opacity >= i.bornOpacity) i.bornDone = true;
+            }
+            pCtx.save();
+            pCtx.beginPath();
+            pCtx.fillStyle = "#8bf5cc";
+            pCtx.globalAlpha = i.opacity;
+            pCtx.arc(i.x, i.y, i.radius, 0, PI * 2);
+            pCtx.fill();
+            pCtx.closePath();
+            pCtx.restore();
+        });
+        if (!scrollCooldown) updateSkillPositions();
+        bCtx.fillRect(ref[0] - len[0] / 2, ref[1] - len[1] / 2, len[0], len[1]);
+        bounceCircles.forEach((i, j) => {
+            // update
+            if (i.x === 0) return;
+            const collisions = i._collisions();
+            const nearest = collisions.sort((a, b) => a.dist - b.dist)[0];
+            if (nearest) i.x += abs(nearest.dist) * (nearest.tile.x > i.x ? -1 : 1) / 8;
+            if (!i._v) i._v = 0;
+            const g = 1.5;
+            const v0 = 20;
+            if (j === 0 && bounceCache.first) {
+                i._v -= g;
+                i.x -= i._v;
+                if (i._collisions().length) {
+                    bounceCache.first = false;
+                    i._v = v0;
+                }
+            } else if (j === bounceCircles.length - 1 && !bounceCache.first) {
+                i._v -= g;
+                i.x += i._v;
+                if (i._collisions().length) {
+                    bounceCache.first = true;
+                    i._v = v0;
+                }
+            }
+        });
+        bounceCircles.forEach(i => {
+            // render
+            const x = i._x();
+            const y = i._y();
+            bCtx.beginPath();
+            bCtx.strokeStyle = "#8d8d8d";
+            bCtx.moveTo(ref[0], ref[1]);
+            bCtx.lineTo(x, y);
+            bCtx.stroke();
+            bCtx.closePath();
+            bCtx.beginPath();
+            bCtx.fillStyle = "#945d3a";
+            bCtx.arc(x, y, i.r, 0, PI * 2);
+            bCtx.fill();
+            bCtx.closePath();
+        });
+        requestAnimationFrame(animate);
+    };
+    let scrollCooldown = true;
+    let scrollTarget = (query.get("scrollTo") * 1 || 0) * innerHeight;
+    let sec = query.get("scrollTo") * 1 || 0;
+    let maxSec = 3;
+    addEventListener("wheel", ev => {
+        if (!scrollCooldown) return;
+        if (ev.deltaY > 0) sec++;
+        else sec--;
+        if (sec < 0) sec = 0;
+        if (sec > maxSec) sec = maxSec;
+        scrollTarget = innerHeight * sec;
+        scrollCooldown = false;
+    });
+    addEventListener("resize", () => {
+        scrollTarget = innerHeight * sec;
+        scrollCooldown = false;
+        updateSkillPositions();
+    });
+    const skills = {
+        Languages: [
+            "C++", "Rust", "Java", "PHP", "JavaScript", "Python", "Shell", "Node.JS", "Bun"
+        ],
+        Databases: [
+            "SQLite", "Mongo"
+        ],
+        Frameworks: [
+            "Electron", "JavaFX", "React", "ReactNative", "three.js", "matter.js", "p5.js"
+        ],
+        Tools: [
+            "JetBrains", "Git", "Linux"
+        ]
+    };
+    const skillLinks = {
+        "C++": "https://isocpp.org/",
+        "Rust": "https://www.rust-lang.org/",
+        "Java": "https://www.oracle.com/technetwork/java/",
+        "PHP": "https://www.php.net/",
+        "JavaScript": "https://www.ecma-international.org/publications-and-standards/standards/ecma-262/",
+        "Python": "https://python.org/",
+        "Shell": "https://en.wikipedia.org/wiki/Shell_script/",
+        "Node.JS": "https://nodejs.org/",
+        "Bun": "https://bun.sh/",
+        "SQLite": "https://sqlite.org/",
+        "Mongo": "https://mongodb.com/",
+        "Electron": "https://www.electronjs.org/",
+        "JavaFX": "https://wiki.openjdk.org/display/OpenJFX/Main",
+        "React": "https://reactjs.org/",
+        "ReactNative": "https://reactnative.dev/",
+        "three.js": "https://threejs.org/",
+        "matter.js": "https://brm.io/matter-js/",
+        "p5.js": "https://p5js.org/",
+        "JetBrains": "https://www.jetbrains.com/",
+        "Git": "https://git-scm.com/",
+        "Linux": "https://kernel.org/"
+    };
+    window.s = skills;
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            const temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+        return array;
+    }
+
+    Object.keys(skills).forEach(i => $(".options").innerHTML += `<div>${i}</div>`);
+    let _lsC = 0;
+    shuffleArray(Object.values(skills).flat()).forEach(i => {
+        let ls;
+        while (!ls || _lsC === ls) ls = rand(1, 4);
+        _lsC = ls;
+        const div = document.createElement("div");
+        div.classList.add("sl-" + ls);
+        div.innerText = i;
+        div.addEventListener("click", () => open(skillLinks[i]));
+        $(".skills-list").appendChild(div);
+    });
+    const updateSkillPositions = () => {
+        const _tmp = [];
+        document.querySelector(".skills-list").classList.add("skills-list-a");
+        const sp = (a, b, c) => a.style[b] === c || (a.style.setProperty(b, c));
+        document.querySelectorAll(".skills-list > div").forEach(i => {
+            sp(i, "position", "");
+            sp(i, "left", "");
+            sp(i, "top", "");
+        });
+        document.querySelectorAll(".skills-list > div").forEach(i => {
+            const rect = i.getBoundingClientRect();
+            _tmp.push([i, rect]);
+        });
+        _tmp.forEach(i => {
+            sp(i[0], "position", "absolute");
+            sp(i[0], "left", i[1].left + "px");
+            sp(i[0], "top", i[1].top + "px");
+        });
+        document.querySelector(".skills-list-a").classList.remove("skills-list-a");
+    };
+    /*const obv = new MutationObserver(r => r);
+    obv.observe(document.querySelector(".skills-list"), {attributes: true});
+    addEventListener("resize", updateSkillPositions);*/
+
+    document.querySelectorAll(".options > div").forEach(i => {
+        i.addEventListener("click", () => {
+            const l = i.innerHTML === "All" ? Object.values(skills).flat() : skills[i.innerHTML];
+            document.querySelectorAll(".skills-list > div").forEach(i => {
+                i.style.opacity = l.includes(i.innerHTML) ? "1" : "0";
+            });
+        });
+    });
+    animatedInfo();
+    animate();
+</script>
 </html>
