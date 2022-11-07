@@ -321,6 +321,7 @@
             const l = i.innerHTML === "All" ? Object.values(skills).flat() : skills[i.innerHTML];
             document.querySelectorAll(".skills-list > div").forEach(i => {
                 i.style.opacity = l.includes(i.innerHTML) ? "1" : "0";
+                i.style.cursor = l.includes(i.innerHTML) ? "pointer" : "default";
             });
         });
     });
