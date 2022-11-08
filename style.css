@@ -178,3 +178,90 @@ canvas {
     --text-color: #ee0f4f;
     font-size: 25px;
 }
+
+.projects {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    translate: calc(-50% - 30px) -50%;
+    display: flex;
+}
+
+.projects > .project {
+    background-color: #022336;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 30px;
+    border-radius: 10px;
+    min-height: 500%;
+    transition: scale .2s, filter .2s;
+}
+
+.projects > .project:hover {
+    scale: 1.1;
+    filter: drop-shadow(0 0 5px #199ae1);
+}
+
+.projects > .project > .name {
+    font-family: monospace, serif;
+}
+
+.projects > .project > .description {
+    margin-top: 30px;
+    color: #a99898;
+}
+
+.projects > .project > .second-part {
+    position: absolute;
+    margin-top: -10px;
+}
+
+.projects > .project > .second-part > .stargazers, .projects > .project > .second-part > .forks {
+    display: flex;
+    font-size: 20px;
+    justify-content: right;
+    transition: scale .2s, translate .2s, filter .2s;
+}
+
+.projects > .project > .second-part > .stargazers > *, .projects > .project > .second-part > .forks > * {
+    cursor: pointer;
+}
+
+.project-second-hover {
+    scale: 1.1;
+    translate: -8px;
+    filter: drop-shadow(0 0 5px #199ae1);
+}
+
+
+.projects > .project > .second-part > .stargazers > img, .projects > .project > .second-part > .forks > img {
+    width: 16px;
+    height: 16px;
+    margin-left: 5px;
+    margin-top: 3px;
+}
+
+.projects > .project > .second-part > .forks > img {
+    margin-top: 5px;
+}
+
+.projects > .project > .tags {
+    margin-top: 50px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.projects > .project > .tags > div {
+    margin-top: 10px;
+    margin-right: 10px;
+    border-radius: 5px;
+    background-color: #011b2a;
+    padding: 5px;
+    transition: scale .2s, filter .2s;
+    cursor: pointer;
+}
+
+.projects > .project > .tags > div:hover {
+    scale: 1.1;
+    filter: drop-shadow(0 0 5px #4fc0c0);
+}
