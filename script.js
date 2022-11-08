@@ -331,6 +331,7 @@ const loadRepositories = async () => {
         if (i % 2 === 0) centered.unshift(json[i]);
         else centered.push(json[i]);
     }
+    $(".projects").innerHTML = "";
     centered.forEach(i => {
         const id = _id++;
         _public_[id] = [i.stargazers_url, i.forks_url];
