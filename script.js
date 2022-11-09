@@ -267,6 +267,7 @@ const animate = () => {
     if (riverCounter++ > 100) {
         riverCounter = 0;
         const img = document.createElement("img");
+        img.draggable = false;
         const contacts = [
             {img: "./assets/discord.png", hoverText: "Oğuzhan#6561"},
             {img: "./assets/github.png", clickUrl: "https://github.com/OguzhanUmutlu"}
