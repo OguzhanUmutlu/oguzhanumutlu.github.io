@@ -125,7 +125,7 @@ const animate = () => {
             lCac[2] = sel[1];
         }
         if (lCac[4] === null) lCac[4] = 0;
-        if ((lCac[5] || 0) < Date.now()) {
+        if ((lCac[5] || 0) < Date.now() && !lCac[6]) {
             lCac[5] = Date.now() + 100;
             const k = [lCac[0][0][0] + [1, -1, 0, 0][lCac[4]], lCac[0][0][1] + [0, 0, -1, 1][lCac[4]]];
             if (k[0] >= 0 && k[1] >= 0 && k[0] < W && k[1] < W) {
