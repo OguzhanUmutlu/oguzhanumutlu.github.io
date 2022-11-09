@@ -1,9 +1,9 @@
-const {round, floor, abs, random, PI, sin, cos, acos, sqrt} = Math;
+const {round, floor, abs, random, PI, sin, cos, acos, sqrt, atan2, min} = Math;
 const rand = (a, b) => floor(random() * (b - a + 1)) + a;
 const query = new URLSearchParams(location.href);
 const DEV_MODE = query.has("DEV_MODE");
 const $ = r => document.querySelector(r);
-// TODO: custom cursor
+// DONE: TO DO: custom cursor
 addEventListener("contextmenu", ev => {
     // TODO: custom context menu
     ev.preventDefault();
@@ -12,7 +12,10 @@ addEventListener("contextmenu", ev => {
 // TODO: electrical particles
 // TODO: make a separate mobile version of it
 // TODO: pressing Tab makes a buggy thing
-// addEventListener("keydown", ev => ev.preventDefault());
+// TODO: motion scrolling in projects part
+addEventListener("keydown", ev => {
+    if (ev.key.length > 1) ev.preventDefault();
+});
 
 await new Promise(r => addEventListener("load", r));
 const containerDiv = $(".container");
@@ -41,7 +44,7 @@ const animatedInfo = async () => {
         "a math fan.",
         "a physics addict.",
         "a student.",
-        "and much more..."
+        "scroll for more..."
     ];
     for (let i = 0; i < texts.length; i++) {
         const text = texts[i];
@@ -78,6 +81,17 @@ bounceCircles.forEach(i => {
     i._y = () => ref[1] + sin(acos(i.x / radius)) * radius;
 });
 let bounceCache = {first: true};
+let riverCounter = 0;
+addEventListener("mousemove", ev => {
+    const tip = $(".tip");
+    const customCursor = $(".custom-cursor");
+    tip.style.left = ev.pageX - tip.getBoundingClientRect().width / 2 + "px";
+    tip.style.top = ev.pageY - tip.getBoundingClientRect().height / 2 + 30 + "px";
+    customCursor.style.left = ev.pageX - customCursor.getBoundingClientRect().width / 2 + "px";
+    customCursor.style.top = ev.pageY - customCursor.getBoundingClientRect().height / 2 + "px";
+});
+const lCtx = $(".l").getContext("2d");
+let lCac = [null, null, null, null, null, null, null];
 const animate = () => {
     ref = [innerWidth * .5, innerHeight * .4];
     radius = innerHeight * .4;
@@ -85,11 +99,70 @@ const animate = () => {
     particleCanvas.height = innerHeight * (maxSec + 1);
     bounceCanvas.width = innerWidth;
     bounceCanvas.height = innerHeight;
-    const diff = scrollTarget - scrollY;
-    if (round(diff) === 0) scrollCooldown = true;
-    else {
-        if (abs(diff / 10) < 1) scrollTo(0, scrollY + (diff > 0 ? 1 : -1));
-        else scrollTo(0, scrollY + diff / 10);
+    if (!eOn) {
+        const diff = scrollTarget - scrollY;
+        if (round(diff) === 0) scrollCooldown = true;
+        else {
+            if (abs(diff / 10) < 1) scrollTo(0, scrollY + (diff > 0 ? 1 : -1));
+            else scrollTo(0, scrollY + diff / 10);
+        }
+    } else {
+        const l = $(".l");
+        const m = min(innerWidth, innerHeight)
+        l.width = m;
+        l.height = m;
+        l.style.top = scrollY + "px";
+        l.style.left = innerWidth * .5 - m / 2 + "px";
+        const W = 33;
+        const rat = m / W;
+        if (!lCac[0]) lCac[0] = [[floor(W / 2), floor(W / 2)]];
+        if (!lCac[3]) lCac[3] = 1;
+        if (lCac[6] === null) lCac[6] = false;
+        if (lCac[1] === null || lCac[2] === null) {
+            const valid = new Array(W).fill(0).map((_, j) => new Array(W).fill(0).map((_, k) => [j, k])).flat().filter(i => !lCac[0].some(j => j[0] === i[0] && j[1] === i[1]));
+            const sel = valid[floor(random() * valid.length)];
+            lCac[1] = sel[0];
+            lCac[2] = sel[1];
+        }
+        if (lCac[4] === null) lCac[4] = 0;
+        if ((lCac[5] || 0) < Date.now()) {
+            lCac[5] = Date.now() + 100;
+            const k = [lCac[0][0][0] + [1, -1, 0, 0][lCac[4]], lCac[0][0][1] + [0, 0, -1, 1][lCac[4]]];
+            if (k[0] >= 0 && k[1] >= 0 && k[0] < W && k[1] < W) {
+                if (lCac[0].some(i => i[0] === k[0] && i[1] === k[1])) {
+                    lCac[6] = true;
+                } else {
+                    lCac[0].unshift(k);
+                    if (lCac[1] === k[0] && lCac[2] === k[1]) {
+                        lCac[3]++;
+                        lCac[1] = null;
+                        lCac[2] = null;
+                    } else lCac[0].pop();
+                }
+            }
+        }
+        lCtx.fillStyle = "#9cff67";
+        lCtx.fillRect(0, 0, m, m);
+        lCtx.fillStyle = "#78d546";
+        lCac[0].forEach(i => {
+            lCtx.beginPath();
+            lCtx.arc(i[0] * rat + rat / 2, i[1] * rat + rat / 2, rat / 2, 0, PI * 2);
+            lCtx.fill();
+            lCtx.closePath();
+        });
+        lCtx.fillStyle = "#f32f63";
+        lCtx.beginPath();
+        lCtx.arc(lCac[1] * rat + rat / 2, lCac[2] * rat + rat / 2, rat / 2, 0, PI * 2);
+        lCtx.fill();
+        lCtx.closePath();
+        if (lCac[6] === true) {
+            lCtx.textAlign = "center";
+            lCtx.font = "35px Arial";
+            lCtx.fillText("You bumped on yourself!", m / 2, m / 2 - 60);
+            lCtx.fillText("Points: " + lCac[3] * 25, m / 2, m / 2 - 20);
+            lCtx.fillText("Press escape to exit", m / 2, m / 2 + 20);
+            lCtx.fillText("Press R to restart", m / 2, m / 2 + 60);
+        }
     }
     //particleCanvas.style.top = scrollY + "px";
     particles = particles.filter(i => !i.bornDone || i.opacity >= 0.01);
@@ -106,6 +179,7 @@ const animate = () => {
     }
     particles.forEach(i => {
         if (i.opacity < 0.01) return;
+        //i._path = (i._path || []).slice(0, 1);
         i.x += i.velocity[0];
         i.y += i.velocity[1];
         if (i.bornDone) {
@@ -114,14 +188,28 @@ const animate = () => {
             i.opacity += 0.01;
             if (i.opacity >= i.bornOpacity) i.bornDone = true;
         }
+        /*particles.filter(j => j !== i && sqrt((j.x - i.x) ** 2 + (j.y - i.y) ** 2) < 50).forEach(j => {
+            pCtx.beginPath();// TODO: looks kinda bad
+            pCtx.strokeStyle = "#8bf5cc";
+            pCtx.moveTo(i.x, i.y);
+            pCtx.lineTo(j.x, j.y);
+            pCtx.stroke();
+            pCtx.closePath();
+            const rad = atan2(j.x - i.x, j.y - i.y);
+            i.x -= sin(rad) * 2;
+            i.y -= cos(rad) * 2;
+        });*/
+        //[[i.x, i.y, i.opacity], ...i._path].forEach((j, k) => {
         pCtx.save();
         pCtx.beginPath();
         pCtx.fillStyle = "#8bf5cc";
         pCtx.globalAlpha = i.opacity;
+        if (pCtx.globalAlpha < 0) pCtx.globalAlpha = 0;
         pCtx.arc(i.x, i.y, i.radius, 0, PI * 2);
         pCtx.fill();
         pCtx.closePath();
         pCtx.restore();
+        //i._path.unshift([i.x, i.y,i.opacity/2]);
     });
     if (!scrollCooldown) updateSkillPositions();
     bCtx.fillRect(ref[0] - len[0] / 2, ref[1] - len[1] / 2, len[0], len[1]);
@@ -168,6 +256,52 @@ const animate = () => {
         bCtx.fill();
         bCtx.closePath();
     });
+    const riverDiv = $(".communication-river");
+    const items = Array.from(riverDiv.children);
+    items.forEach((i, j) => {
+        if (i.style.left.replace("px", "") * 1 - i.style.width.replace("px", "") * 1 > innerWidth) {
+            i.remove();
+            delete items[j];
+        }
+    });
+    if (riverCounter++ > 100) {
+        riverCounter = 0;
+        const img = document.createElement("img");
+        const contacts = [
+            {img: "./assets/discord.png", hoverText: "Oğuzhan#6561"},
+            {img: "./assets/github.png", clickUrl: "https://github.com/OguzhanUmutlu"}
+        ];
+        const contact = contacts[floor(random() * contacts.length)];
+        img.src = contact.img;
+        img.style.width = "64px";
+        img.style.top = rand(64, riverDiv.getBoundingClientRect().height - 64) + "px";
+        img.style.left = "-64px";
+        if (contact.clickUrl) {
+            img.addEventListener("click", () => open(contact.clickUrl));
+            img.style.cursor = "pointer";
+        }
+        const tipDiv = $(".tip");
+        img.addEventListener("mouseenter", () => {
+            if (contact.hoverText) {
+                tipDiv.innerText = contact.hoverText;
+                tipDiv.style.display = "block";
+            }
+            img.classList.add("river-stopped");
+        });
+        img.addEventListener("mouseout", () => {
+            tipDiv.style.display = "none";
+            img.classList.remove("river-stopped");
+        });
+        addEventListener("blur", () => img.dispatchEvent(new MouseEvent("mouseout", {})));
+        riverDiv.appendChild(img);
+    }
+    items.forEach(i => {
+        if (!i.classList.contains("river-stopped")) i.style.left = i.style.left.replace("px", "") * 1 + 1 + "px";
+    });
+    window._fps = (window._fps || []);
+    window._fps.push(Date.now() + 1000);
+    window._fps = window._fps.filter(i => i > Date.now());
+    window.fps = window._fps.length;
     requestAnimationFrame(animate);
 };
 let scrollCooldown = true;
@@ -225,7 +359,6 @@ const skillLinks = {
     "Git": "https://git-scm.com/",
     "Linux": "https://kernel.org/"
 };
-window.s = skills;
 
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -282,6 +415,7 @@ document.querySelectorAll(".options > div").forEach(i => {
         });
     });
 });
+let eOn = false;
 animatedInfo().then(r => r);
 animate();
 const resizeProjectHandler = () => {
@@ -320,12 +454,14 @@ const handleProjectScroll = () => {
 };
 handleProjectScroll();
 const REPO_AMOUNT = 11;
-let _id = 0;
-window._public_ = {};
 const loadRepositories = async () => {
-    const json = Array.from(await (await fetch("https://api.github.com/users/OguzhanUmutlu/repos")).json())
-        .filter(i => !i.fork && i.owner.login === "OguzhanUmutlu" && !i.archived && i.visibility === "public")
-        .sort((a, b) => b.stargazers_count - a.stargazers_count).slice(0, REPO_AMOUNT);
+    const json = await new Promise(res => {
+        fetch("https://api.github.com/users/OguzhanUmutlu/repos").then(r => r.json().then(r => res(
+            r.filter(i => !i.fork && i.owner.login === "OguzhanUmutlu" && !i.archived && i.visibility === "public")
+                .sort((a, b) => b.stargazers_count - a.stargazers_count).slice(0, REPO_AMOUNT)
+        )).catch(() => res(false))).catch(() => res(false))
+    });
+    if (!json) return false;
     const centered = [json[0]];
     for (let i = 1; i < json.length; i++) {
         if (i % 2 === 0) centered.unshift(json[i]);
@@ -333,18 +469,16 @@ const loadRepositories = async () => {
     }
     $(".projects").innerHTML = "";
     centered.forEach(i => {
-        const id = _id++;
-        _public_[id] = [i.stargazers_url, i.forks_url];
         const div = document.createElement("div");
         div.innerHTML = `
 <div class="second-part">
     <div class="stargazers">
         <div onclick="window.open('https://github.com/OguzhanUmutlu/${i.name}/stargazers')">${i.stargazers_count}</div>
-        <img onclick="window.open('https://github.com/OguzhanUmutlu/${i.name}/stargazers')" src="star.png" draggable="false">
+        <img onclick="window.open('https://github.com/OguzhanUmutlu/${i.name}/stargazers')" src="assets/star.png" draggable="false">
     </div>
     <div class="forks">
         <div onclick="window.open('https://github.com/OguzhanUmutlu/${i.name}/network/members')">${i.forks}</div>
-        <img onclick="window.open('https://github.com/OguzhanUmutlu/${i.name}/network/members')" src="fork.png" draggable="false">
+        <img onclick="window.open('https://github.com/OguzhanUmutlu/${i.name}/network/members')" src="assets/fork.png" draggable="false">
     </div>
 </div>
 <div class="name">${i.name}</div>
@@ -367,7 +501,25 @@ const loadRepositories = async () => {
         addEventListener("blur", () => down = false);
         $(".projects").appendChild(div);
     });
+    return true;
 };
-await loadRepositories();
+$(".e").addEventListener("click", () => {
+    eOn = !eOn;
+    const h = $(".h");
+    h.style.pointerEvents = eOn ? "all" : "none";
+    h.style.opacity = eOn ? "1" : "0";
+    if (eOn) lCac = new Array(7).fill(null);
+});
+addEventListener("keydown", ev => {
+    if (eOn) {
+        if (ev.key === "Escape") $(".e").dispatchEvent(new MouseEvent("click"));
+        if (ev.key.toLowerCase() === "w") lCac[4] = 2;
+        if (ev.key.toLowerCase() === "a") lCac[4] = 1;
+        if (ev.key.toLowerCase() === "s") lCac[4] = 3;
+        if (ev.key.toLowerCase() === "d") lCac[4] = 0;
+        if (ev.key.toLowerCase() === "r") lCac = new Array(7).fill(null);
+    }
+});
+if (!(await loadRepositories())) $(".projects").innerHTML = "Couldn't fetch the repositories due to the internet connection.";
 handleProjectHovers();
 resizeProjectHandler();

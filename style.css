@@ -5,6 +5,7 @@
     font-family: Roboto, serif;
     font-weight: bold;
     user-select: none;
+    cursor: none !important;
 }
 
 body {
@@ -264,4 +265,65 @@ canvas {
 .projects > .project > .tags > div:hover {
     scale: 1.1;
     filter: drop-shadow(0 0 5px #4fc0c0);
+}
+
+.communication-river {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    translate: 0 -50%;
+    height: 50%;
+    width: 100%;
+    overflow: hidden;
+}
+
+.communication-river > img {
+    position: absolute;
+    transition: scale .2s, filter .2s;
+}
+
+.river-stopped {
+    scale: 1.1;
+    filter: drop-shadow(0 0 20px #2a30a8);
+}
+
+.tip {
+    position: absolute;
+    display: none;
+    pointer-events: none;
+    color: #9845c9;
+    text-shadow: 0 0 15px white;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.custom-cursor {
+    position: absolute;
+    left: -50%;
+    width: 16px;
+    height: 16px;
+    background: #2eb3ff;
+    border-radius: 50%;
+    filter: drop-shadow(0 0 5px #199ae1);
+    pointer-events: none;
+}
+
+.e {
+    cursor: pointer;
+}
+
+.h {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 400%;
+    height: 400%;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .8s;
+}
+
+.l {
+    position: absolute;
 }
