@@ -516,12 +516,13 @@ $(".e").addEventListener("click", () => {
     eOn = !eOn;
     const h = $(".h");
     h.style.pointerEvents = eOn ? "all" : "none";
+    $(".l").style.pointerEvents = eOn ? "all" : "none";
     h.style.opacity = eOn ? "1" : "0";
     if (eOn) lCac = new Array(7).fill(null);
 });
 addEventListener("keydown", ev => {
     if (eOn) {
-        if (ev.key === "Escape") $(".e").dispatchEvent(new MouseEvent("click"));
+        if (ev.key === "Escape") $(".e").click();
         if (ev.key.toLowerCase() === "w") lCac[4] = 2;
         if (ev.key.toLowerCase() === "a") lCac[4] = 1;
         if (ev.key.toLowerCase() === "s") lCac[4] = 3;
@@ -532,3 +533,6 @@ addEventListener("keydown", ev => {
 if (!(await loadRepositories())) $(".projects").innerHTML = "Couldn't fetch the repositories due to the internet connection.";
 handleProjectHovers();
 resizeProjectHandler();
+$(".h").addEventListener("click", ev => {
+    if (ev.composedPath()[0] === $(".h")) $(".e").click()
+});
