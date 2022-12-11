@@ -92,8 +92,12 @@ addEventListener("mousemove", ev => {
 });
 const lCtx = $(".l").getContext("2d");
 let lCac = [null, null, null, null, null, null, null];
+let projectScrollTarget = 0;
+let projectScrollCurrent = 0;
 const animate = () => {
     ref = [innerWidth * .5, innerHeight * .4];
+    projectScrollCurrent += (projectScrollTarget - projectScrollCurrent) / 15;
+    $(".projects").style.transform = "translateX(" + projectScrollCurrent + "px)";
     radius = innerHeight * .4;
     particleCanvas.width = innerWidth;
     particleCanvas.height = innerHeight * (maxSec + 1);
@@ -437,21 +441,25 @@ const handleProjectHovers = () => {
     });
 };
 const handleProjectScroll = () => {
-    let transform = 0;
     const projectsDiv = $(".projects");
     let down = false;
     projectsDiv.addEventListener("mousedown", () => down = true);
     addEventListener("mousemove", ev => {
         if (!down) return document.body.style.cursor = "grab";
-        const mov = ev.movementX;
-        transform += mov;
-        const max = (projectsDiv.getBoundingClientRect().width - innerWidth) / 2 + 15;
-        if (abs(transform) > max) transform -= mov;
-        projectsDiv.style.transform = "translateX(" + transform + "px)";
+        const mov = ev.movementX * 2;
+        projectScrollTarget += mov;
+        const max = (projectsDiv.getBoundingClientRect().width - innerWidth) / 2 + 30;
+        if (abs(projectScrollTarget) > max) projectScrollTarget = max * (projectScrollTarget > 0 ? 1 : -1);
         document.body.style.cursor = "grabbing";
     });
-    addEventListener("mouseup", () => down = false);
-    addEventListener("blur", () => down = false);
+    addEventListener("mouseup", () => {
+        down = false;
+        document.body.style.cursor = "grab";
+    });
+    addEventListener("blur", () => {
+        down = false;
+        document.body.style.cursor = "grab";
+    });
 };
 handleProjectScroll();
 const REPO_AMOUNT = 11;
@@ -473,9 +481,9 @@ const loadRepositories = async () => {
         const div = document.createElement("div");
         div.innerHTML = `
 <div class="second-part">
-    <div class="stargazers">
-        <div onclick="window.open('https://github.com/OguzhanUmutlu/${i.name}/stargazers')">${i.stargazers_count}</div>
-        <img onclick="window.open('https://github.com/OguzhanUmutlu/${i.name}/stargazers')" src="assets/star.png" draggable="false">
+    <div class="stargazers" onclick="window.open('https://github.com/OguzhanUmutlu/${i.name}/stargazers')">
+        <div>${i.stargazers_count}</div>
+        <img src="assets/star.png" draggable="false">
     </div>
     <div class="forks">
         <div onclick="window.open('https://github.com/OguzhanUmutlu/${i.name}/network/members')">${i.forks}</div>
