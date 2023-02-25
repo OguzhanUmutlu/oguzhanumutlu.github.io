@@ -3,16 +3,13 @@ const rand = (a, b) => floor(random() * (b - a + 1)) + a;
 const query = new URLSearchParams(location.href);
 const DEV_MODE = query.has("DEV_MODE");
 const $ = r => document.querySelector(r);
-// DONE: TO DO: custom cursor
 addEventListener("contextmenu", ev => {
     // TODO: custom context menu
     ev.preventDefault();
 });
-// TODO: particles will have a path behind them that is disappearing
+// TODO: particles will have a path behind them that is disappearing, does not look too good
 // TODO: electrical particles
 // TODO: make a separate mobile version of it
-// TODO: pressing Tab makes a buggy thing
-// TODO: motion scrolling in projects part
 addEventListener("keydown", ev => {
     if (ev.key.length > 1) ev.preventDefault();
 });
@@ -132,17 +129,19 @@ const animate = () => {
         if ((lCac[5] || 0) < Date.now() && !lCac[6]) {
             lCac[5] = Date.now() + 100;
             const k = [lCac[0][0][0] + [1, -1, 0, 0][lCac[4]], lCac[0][0][1] + [0, 0, -1, 1][lCac[4]]];
-            if (k[0] >= 0 && k[1] >= 0 && k[0] < W && k[1] < W) {
-                if (lCac[0].some(i => i[0] === k[0] && i[1] === k[1])) {
-                    lCac[6] = true;
-                } else {
-                    lCac[0].unshift(k);
-                    if (lCac[1] === k[0] && lCac[2] === k[1]) {
-                        lCac[3]++;
-                        lCac[1] = null;
-                        lCac[2] = null;
-                    } else lCac[0].pop();
-                }
+            if (k[0] < 0) k[0] = W - 1;
+            if (k[1] < 0) k[1] = W - 1;
+            if (k[0] >= W) k[0] = 0;
+            if (k[1] >= W) k[1] = 0;
+            if (lCac[0].some(i => i[0] === k[0] && i[1] === k[1])) {
+                lCac[6] = true;
+            } else {
+                lCac[0].unshift(k);
+                if (lCac[1] === k[0] && lCac[2] === k[1]) {
+                    lCac[3]++;
+                    lCac[1] = null;
+                    lCac[2] = null;
+                } else lCac[0].pop();
             }
         }
         lCtx.fillStyle = "#9cff67";
@@ -154,36 +153,53 @@ const animate = () => {
             lCtx.fill();
             lCtx.closePath();
         });
-        lCtx.fillStyle = "#f32f63";
-        lCtx.beginPath();
-        lCtx.arc(lCac[1] * rat + rat / 2, lCac[2] * rat + rat / 2, rat / 2, 0, PI * 2);
-        lCtx.fill();
-        lCtx.closePath();
+        if (lCac[1] !== null) {
+            lCtx.fillStyle = "#f32f63";
+            lCtx.beginPath();
+            lCtx.arc(lCac[1] * rat + rat / 2, lCac[2] * rat + rat / 2, rat / 2, 0, PI * 2);
+            lCtx.fill();
+            lCtx.closePath();
+        }
         if (lCac[6] === true) {
             lCtx.textAlign = "center";
             lCtx.font = "35px Arial";
-            lCtx.fillText("You bumped on yourself!", m / 2, m / 2 - 60);
-            lCtx.fillText("Points: " + lCac[3] * 25, m / 2, m / 2 - 20);
-            lCtx.fillText("Press escape to exit", m / 2, m / 2 + 20);
-            lCtx.fillText("Press R to restart", m / 2, m / 2 + 60);
+            lCtx.fillText("\x59\x6f\x75\x20\x62\x75\x6d\x70\x65\x64\x20\x6f\x6e\x20\x79\x6f\x75\x72\x73\x65\x6c\x66\x21", m / 2, m / 2 - 60);
+            lCtx.fillText("\x50\x6f\x69\x6e\x74\x73: " + lCac[3] * 25, m / 2, m / 2 - 20);
+            lCtx.fillText("\x50\x72\x65\x73\x73\x20\x65\x73\x63\x61\x70\x65\x20\x74\x6f\x20\x65\x78\x69\x74", m / 2, m / 2 + 20);
+            lCtx.fillText("\x50\x72\x65\x73\x73\x20\x52\x20\x74\x6f\x20\x72\x65\x73\x74\x61\x72\x74", m / 2, m / 2 + 60);
+            // hmm?
         }
     }
     //particleCanvas.style.top = scrollY + "px";
     particles = particles.filter(i => !i.bornDone || i.opacity >= 0.01);
     if (particles.length < 100) {
-        particles.push({
+        if (random() < .001) {
+            particles.push({
+                x: rand(0, innerWidth),
+                y: rand(scrollY, scrollY + innerHeight),
+                velocity: [rand(-2, 2) || 1, rand(-2, 2) || 1],
+                bornOpacity: 5,
+                bornDone: false,
+                opacity: 0.01,
+                radius: rand(14, 20),
+                path: [],
+                s: true
+            });
+        } else particles.push({
             x: rand(0, particleCanvas.width),
             y: rand(0, particleCanvas.height),
             velocity: [rand(-2, 2) || 1, rand(-2, 2) || 1],
             bornOpacity: rand(5, 10) / 10,
             bornDone: false,
             opacity: 0.01,
-            radius: rand(4, 10)
+            radius: rand(4, 10),
+            path: []
         });
     }
     particles.forEach(i => {
         if (i.opacity < 0.01) return;
-        //i._path = (i._path || []).slice(0, 1);
+        if (i.path.length > 20) i.path.pop();
+        i.path.unshift([i.x, i.y]);
         i.x += i.velocity[0];
         i.y += i.velocity[1];
         if (i.bornDone) {
@@ -203,7 +219,16 @@ const animate = () => {
             i.x -= sin(rad) * 2;
             i.y -= cos(rad) * 2;
         });*/
-        //[[i.x, i.y, i.opacity], ...i._path].forEach((j, k) => {
+        if (i.s) {
+            pCtx.save();
+            pCtx.beginPath();
+            pCtx.arc(i.x + i.radius / 2, i.y + i.radius / 2, i.radius / 2, 0, PI * 2);
+            pCtx.clip();
+            pCtx.drawImage(document.querySelector(".start-container > img"), i.x, i.y, i.radius, i.radius);
+            pCtx.closePath();
+            pCtx.restore();
+        }
+        if (i.y < scrollY - i.radius || i.y > scrollY + innerHeight + i.radius || i.s) return;
         pCtx.save();
         pCtx.beginPath();
         pCtx.fillStyle = "#8bf5cc";
@@ -213,7 +238,6 @@ const animate = () => {
         pCtx.fill();
         pCtx.closePath();
         pCtx.restore();
-        //i._path.unshift([i.x, i.y,i.opacity/2]);
     });
     if (!scrollCooldown) updateSkillPositions();
     bCtx.fillRect(ref[0] - len[0] / 2, ref[1] - len[1] / 2, len[0], len[1]);
@@ -367,7 +391,7 @@ const skillLinks = {
 
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
+        const j = floor(random() * (i + 1));
         const temp = array[i];
         array[i] = array[j];
         array[j] = temp;
@@ -523,10 +547,20 @@ $(".e").addEventListener("click", () => {
 addEventListener("keydown", ev => {
     if (eOn) {
         if (ev.key === "Escape") $(".e").click();
-        if (ev.key.toLowerCase() === "w") lCac[4] = 2;
-        if (ev.key.toLowerCase() === "a") lCac[4] = 1;
-        if (ev.key.toLowerCase() === "s") lCac[4] = 3;
-        if (ev.key.toLowerCase() === "d") lCac[4] = 0;
+        let tM = null;
+        if (ev.key.toLowerCase() === "w") tM = 2;
+        if (ev.key.toLowerCase() === "a") tM = 1;
+        if (ev.key.toLowerCase() === "s") tM = 3;
+        if (ev.key.toLowerCase() === "d") tM = 0;
+        if (tM !== null) {
+            const k = [lCac[0][0][0] + [1, -1, 0, 0][tM], lCac[0][0][1] + [0, 0, -1, 1][tM]];
+            const W = 33;
+            if (k[0] < 0) k[0] = W - 1;
+            if (k[1] < 0) k[1] = W - 1;
+            if (k[0] >= W) k[0] = 0;
+            if (k[1] >= W) k[1] = 0;
+            if (!lCac[0].some(i => i[0] === k[0] && i[1] === k[1])) lCac[4] = tM;
+        }
         if (ev.key.toLowerCase() === "r") lCac = new Array(7).fill(null);
     }
 });
@@ -535,4 +569,10 @@ handleProjectHovers();
 resizeProjectHandler();
 $(".h").addEventListener("click", ev => {
     if (ev.composedPath()[0] === $(".h")) $(".e").click()
+});
+addEventListener("mousemove", ev => {
+    particles.forEach(i => {
+        i.velocity[0] += ev.movementX / 150;
+        i.velocity[1] += ev.movementY / 150;
+    });
 });
