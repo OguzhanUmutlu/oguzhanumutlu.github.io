@@ -1,59 +1,65 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta content="Oğuzhan's Portfolio" property="og:title"/>
     <meta content="Hi, I'm Oğuzhan. I'm currently a FullStack developer and a student!" property="og:description"/>
     <meta content="https://oguzhanumutlu.github.io/" property="og:url"/>
     <meta content="https://oguzhanumutlu.github.io/assets/icon.png" property="og:image"/>
     <meta content="#619EFF" data-react-helmet="true" name="theme-color"/>
+    <link rel="icon" href="./assets/circle-icon.png" type="text/css">
     <title>Oğuzhan's Portfolio</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="assets/circle-icon.png">
+    <link rel="stylesheet" href="./index.css">
 </head>
 <body>
-<canvas class="particle-effect"></canvas>
-<div class="start-container">
-    <img src="assets/icon.png" draggable="false">
-</div>
-<div class="container" style="display: none; translate: 0 -100%">
-    <section class="main-section">
-        <h1>
-            Hello, I'm <span class="cool-text">Oğuzhan</span>,<br>
-            &nbsp;<span class="animated-info"></span><span class="cursor">&nbsp;</span>
-        </h1>
+<div class="cursor"></div>
+<div class="particles"></div>
+<div class="sections">
+    <section class="section-main">
+        <div class="main-text">
+            Hello, I'm&nbsp;<i class="my-name">Oğuzhan</i>,<br>
+            <div class="mv-text">
+                <div class="moving-text"></div>
+                <div class="text-cursor"></div>
+            </div>
+        </div>
+        <div class="scroll-more bottom"></div>
     </section>
-    <section class="skills-section">
-        <div class="options">
+    <section class="section-skills">
+        <div class="scroll-more top"></div>
+        <h1>Skills</h1>
+        <div class="skill-options">
             <div>All</div>
         </div>
-        <div class="skills-list skills-list-a"></div>
-        <canvas class="bounce-effect"></canvas>
+        <div class="skill-list"></div>
+        <div class="scroll-more bottom"></div>
     </section>
-    <section class="projects-section">
-        <h1>Popular Repositories</h1>
-        <div class="projects">
-            Fetching, please wait...
-        </div>
+    <section class="section-projects">
+        <div class="scroll-more top"></div>
+        <h1>Projects</h1>
+        <div class="repositories"></div>
+        <div class="scroll-more bottom"></div>
     </section>
-    <section class="contact-section">
+    <section class="section-contacts">
+        <div class="scroll-more top"></div>
         <h1>Contact Me</h1>
-        <div class="communication-river"></div>
-        <div class="footer">©
-            <script>document.write(new Date().getFullYear().toString())</script>
-            OguzhanUmutlu&nbsp;&nbsp;&nbsp;&nbsp;<br>
-            <span style="font-size: 30px">Published with <a target="_blank"
-                                                            href="https://github.com">Github</a> <span
-                    style="color: red; text-shadow: none">&hearts;<span class="e">🐍</span></span></span>
+        <div class="contacts">
+            <div>
+                <div>Discord</div>
+                <div class="gray">@oguzhanumutlu</div>
+                <div><img src="./assets/discord.png" draggable="false"></div>
+            </div>
+            <div onclick="window.open('https://github.com/OguzhanUmutlu/', '_blank')">
+                <div>GitHub</div>
+                <div class="gray">@OguzhanUmutlu</div>
+                <div><img src="./assets/github.png" draggable="false"></div>
+            </div>
         </div>
     </section>
 </div>
-<div class="tip"></div>
-<div class="h">
-    <canvas class="l"></canvas>
-</div>
-<div class="custom-cursor"></div>
 </body>
-<script type="module" src="script.js"></script>
+<script type="module" src="./index.js"></script>
 </html>

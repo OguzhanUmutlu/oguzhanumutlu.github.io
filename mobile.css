@@ -1,0 +1,63 @@
+.main-text {
+    font-size: 35px;
+}
+
+.moving-text {
+    font-size: 25px;
+}
+
+h1 {
+    font-size: 35px;
+}
+
+section {
+    height: 80vh;
+    padding-top: 10vh;
+    padding-bottom: 10vh;
+}
+
+.cursor {
+    display: none;
+}
+
+.skill-options {
+    font-size: 16px;
+}
+
+.skill-list {
+    width: 100%;
+}
+
+.repo {
+    width: 250px;
+    height: 200px;
+    padding: 15px;
+    margin: 10px;
+    border-radius: 10px;
+}
+
+.keywords {
+    bottom: 15px;
+    width: calc(100% - 15px);
+    font-size: 14px;
+}
+
+.keywords > div {
+    padding: 3px;
+}
+
+.sl-0 {
+    font-size: 30px;
+}
+
+.sl-1 {
+    font-size: 20px;
+}
+
+.sl-2 {
+    font-size: 20px;
+}
+
+.sl-3 {
+    font-size: 15px;
+}

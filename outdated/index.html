@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="Oğuzhan's Portfolio" property="og:title"/>
+    <meta content="Hi, I'm Oğuzhan. I'm currently a FullStack developer and a student!" property="og:description"/>
+    <meta content="https://oguzhanumutlu.github.io/" property="og:url"/>
+    <meta content="https://oguzhanumutlu.github.io/assets/icon.png" property="og:image"/>
+    <meta content="#619EFF" data-react-helmet="true" name="theme-color"/>
+    <title>Oğuzhan's Portfolio</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="icon" href="./assets/circle-icon.png">
+</head>
+<body>
+<canvas class="particle-effect"></canvas>
+<div class="start-container">
+    <img src="./assets/icon.png" draggable="false">
+</div>
+<div class="container" style="display: none; translate: 0 -100%">
+    <section class="main-section">
+        <h1>
+            Hello, I'm <span class="cool-text">Oğuzhan</span>,<br>
+            &nbsp;<span class="animated-info"></span><span class="cursor">&nbsp;</span>
+        </h1>
+    </section>
+    <section class="skills-section">
+        <div class="options">
+            <div>All</div>
+        </div>
+        <div class="skills-list skills-list-a"></div>
+        <canvas class="bounce-effect"></canvas>
+    </section>
+    <section class="projects-section">
+        <h1>Popular Repositories</h1>
+        <div class="projects">
+            Fetching, please wait...
+        </div>
+    </section>
+    <section class="contact-section">
+        <h1>Contact Me</h1>
+        <div class="communication-river"></div>
+        <div class="footer">©
+            <script>document.write(new Date().getFullYear().toString())</script>
+            OguzhanUmutlu&nbsp;&nbsp;&nbsp;&nbsp;<br>
+            <span style="font-size: 30px">Published with <a target="_blank"
+                                                            href="https://github.com">Github</a> <span
+                    style="color: red; text-shadow: none">&hearts;<span class="e">🐍</span></span></span>
+        </div>
+    </section>
+</div>
+<div class="tip"></div>
+<div class="h">
+    <canvas class="l"></canvas>
+</div>
+<div class="custom-cursor"></div>
+</body>
+<script type="module" src="./script.js"></script>
+</html>

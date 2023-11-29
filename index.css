@@ -1,0 +1,332 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap");
+
+* {
+    user-select: none;
+}
+
+body, html {
+    margin: 0;
+    transition: scroll-behavior 5s ease-in-out;
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: #011825;
+    cursor: none;
+    color: white;
+    font-family: Roboto, serif;
+    font-weight: bold;
+    overflow: hidden;
+}
+
+h1 {
+    text-align: center;
+    font-size: 45px;
+}
+
+.cursor {
+    position: fixed;
+    translate: -100%;
+    width: 20px;
+    height: 20px;
+    background: #2eb3ff;
+    border-radius: 50%;
+    pointer-events: none;
+    box-shadow: 0 0 5px #199ae1;
+    transition: opacity .1s, scale .08s;
+    z-index: 99999;
+}
+
+.sections {
+    display: flex;
+    width: 500vw;
+}
+
+section {
+    position: relative;
+    width: 100vw;
+    height: 70vh;
+    padding-top: 15vh;
+    padding-bottom: 15vh;
+    display: flex;
+    flex-direction: column;
+    transition: all 1s;
+    align-items: center;
+}
+
+.section-main {
+    justify-content: center;
+}
+
+.section-skills {
+}
+
+.section-projects {
+}
+
+.section-contacts {
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #005d9f;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #18a6ff;
+}
+
+.particles {
+    position: absolute;
+}
+
+.particle {
+    --dx: 0;
+    --dy: 0;
+    position: absolute;
+    border-radius: 50%;
+    z-index: -1000;
+    background: #8bf5cc;
+    box-shadow: 0 0 15px #199ae1;
+    animation-fill-mode: forwards;
+    animation-name: particle;
+    translate: var(--dx) var(--dy);
+    transition: translate 5s linear;
+}
+
+.particle-img {
+    background: url("./assets/circle-icon.png");
+    background-size: 100% 100%;
+}
+
+@keyframes particle {
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+.my-name {
+    text-shadow: 0 0 20px #2eb3ff;
+}
+
+.scroll-more {
+    text-align: center;
+    opacity: 0.5;
+    transition: opacity .3s, scale .5s;
+}
+
+.top {
+    position: absolute;
+    top: 5%;
+}
+
+.bottom {
+    position: absolute;
+    bottom: 5%;
+}
+
+.scroll-more:hover {
+    opacity: 1 !important;
+    scale: 1.05;
+}
+
+.skill-options {
+    display: flex;
+    font-size: 20px;
+}
+
+.skill-options > div {
+    margin: 10px;
+    transition: scale .2s, text-shadow .2s;
+}
+
+.skill-options > div:hover {
+    scale: 1.2;
+    text-shadow: 0 0 20px #2eb3ff;
+}
+
+.skill-list {
+    display: flex;
+    width: 70%;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.skill-list > div {
+    padding: 10px;
+    transition: scale .5s, opacity .5s;
+    color: var(--text-color);
+}
+
+.skill-list > div:hover {
+    scale: 1.1;
+    text-decoration: underline;
+    font-weight: bold;
+    text-shadow: 0 0 5px var(--text-color);
+}
+
+.sl-0 {
+    --text-color: #e76087;
+    font-size: 40px;
+}
+
+.sl-1 {
+    --text-color: #e03667;
+    font-size: 30px;
+}
+
+.sl-2 {
+    --text-color: #f1a6bb;
+    font-size: 30px;
+}
+
+.sl-3 {
+    --text-color: #ee0f4f;
+    font-size: 25px;
+}
+
+.repositories {
+    display: flex;
+    transition: translate 1s ease-out;
+}
+
+.repo {
+    position: relative;
+    width: 350px;
+    height: 250px;
+    background: rgba(3, 110, 168, 0.5);
+    padding: 30px;
+    margin: 10px;
+    border-radius: 10px;
+    transition: scale .2s, box-shadow .2s;
+}
+
+.repo > .info > .name {
+    font-family: monospace, serif;
+    pointer-events: none;
+}
+
+.stars, .forks {
+    text-align: right;
+}
+
+.stars > img, .forks > img {
+    width: 16px;
+    translate: 0 2px;
+}
+
+.stars {
+    margin-top: -18px;
+}
+
+.keywords {
+    position: absolute;
+    bottom: 30px;
+    width: calc(100% - 60px);
+    height: max-content;
+    display: flex;
+    flex-wrap: wrap;
+    pointer-events: none;
+}
+
+.keywords > div {
+    padding: 5px;
+    margin: 5px;
+    background: rgba(1, 25, 38, 0.5);
+    border-radius: 5px;
+}
+
+.repo > .description {
+    margin-top: 10px;
+    color: #dedede;
+    pointer-events: none;
+}
+
+.repo:hover {
+    scale: 1.05;
+    box-shadow: 0 0 20px #2eb3ff;
+}
+
+.contacts {
+    display: flex;
+}
+
+.contacts > div {
+    text-align: center;
+    margin: 10px;
+    font-size: 30px;
+    transition: scale .2s;
+}
+
+.contacts > div:hover {
+    text-decoration: underline;
+    scale: 1.1;
+}
+
+.contacts > div > div > img {
+    margin-top: 10px;
+    width: 80px;
+}
+
+.gray {
+    color: rgb(128, 128, 128);
+    font-size: 16px;
+}
+
+.text-cursor {
+    width: 3px;
+    border-radius: 3px;
+    height: 40px;
+    background: rgb(128, 128, 128);
+    margin-left: 3px;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-duration: .5s;
+    animation-name: cursor-blink;
+}
+
+.mv-text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: max-content;
+    min-height: 54px;
+}
+
+.moving-text {
+    font-size: 35px;
+}
+
+.main-text {
+    text-align: center;
+    font-size: 45px;
+}
+
+@keyframes cursor-blink {
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
