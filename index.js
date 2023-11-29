@@ -244,8 +244,8 @@ const loadRepositories = async () => {
             down = true;
         };
 
-        function onMove(ev) {
-            mv += Math.sqrt((ev.clientX - mouse.x) ** 2 + (ev.clientY - mouse.y) ** 2);
+        function onMove() {
+            mv += 1; // Math.sqrt((ev.clientX - mouse.x) ** 2 + (ev.clientY - mouse.y) ** 2);
         }
 
         addEventListener("mousemove", ev => onMove(ev));
