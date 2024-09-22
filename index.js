@@ -269,7 +269,7 @@ async function runAnimatedInfo() {
         "a 2D/3D web game developer.",
         "a math fan.",
         "a physics addict.",
-        "a student.",
+        "a mechanical engineer.",
         "scroll for more..."
     ];
     for (let i = 0; i < texts.length; i++) {
