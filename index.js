@@ -265,11 +265,11 @@ async function runAnimatedInfo() {
     const animatedInfoDiv = document.querySelector(".moving-text");
     const texts = [
         "a full stack web developer.",
+        "a mechanical engineer.",
         "an app developer.",
         "a 2D/3D web game developer.",
         "a math fan.",
         "a physics addict.",
-        "a mechanical engineer.",
         "scroll for more..."
     ];
     for (let i = 0; i < texts.length; i++) {
