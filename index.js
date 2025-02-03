@@ -265,7 +265,7 @@ async function runAnimatedInfo() {
     const animatedInfoDiv = document.querySelector(".moving-text");
     const texts = [
         "a full stack web developer.",
-        "a mechanical engineer.",
+        "a low-level programming enthusiast.",
         "an app developer.",
         "a 2D/3D web game developer.",
         "a math fan.",
